@@ -1,0 +1,12 @@
+{
+  "name": "Devil Mail Client",
+  "short_name": "Devil Mail",
+  "description": "Browser-style mail workspace with named tabs, monitoring and notifications.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": [
+    {"src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
