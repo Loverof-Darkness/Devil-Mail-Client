@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { normalizeUrl } from "../core/url.js";
 import { MailMonitorManager, parseStatus } from "../core/monitor.js";
+import { importState, sanitizeProvider } from "../core/storage.js";
 
 test("normalizeUrl forces HTTPS when the scheme is omitted", () => {
   assert.equal(normalizeUrl("mail.example.com"), "https://mail.example.com/");
@@ -88,4 +89,39 @@ test("monitor establishes a baseline before raising a new-mail event", async () 
 
   manager.stopAll();
   globalThis.fetch = originalFetch;
+});
+
+
+test("workspace imports preserve supported providers but never import monitor runtime state", () => {
+  const imported = importState({
+    app: "Devil Mail Client",
+    schemaVersion: 2,
+    settings: { googleClientId: "public-client-id" },
+    tabs: [{
+      id: "original",
+      name: "Work",
+      url: "https://mail.example.com/",
+      provider: "gmail",
+      accountEmail: "user@example.com",
+      unreadCount: 42,
+      latestMessageId: "secret-runtime-id",
+      monitorError: "old error",
+      lastCheckedAt: 123
+    }]
+  });
+
+  assert.equal(imported.tabs.length, 1);
+  assert.equal(imported.tabs[0].provider, "gmail");
+  assert.equal(imported.tabs[0].unreadCount, 0);
+  assert.equal(imported.tabs[0].latestMessageId, "");
+  assert.equal(imported.tabs[0].monitorError, "");
+  assert.equal(sanitizeProvider("outlook"), "outlook");
+  assert.equal(sanitizeProvider("unknown"), "none");
+});
+
+test("workspace imports reject non-workspace JSON", () => {
+  assert.throws(
+    () => importState({ app: "Other App", tabs: [] }),
+    /not a Devil Mail Client workspace/
+  );
 });
