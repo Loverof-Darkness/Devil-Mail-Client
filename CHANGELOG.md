@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0
+
+- Added webmail service presets.
+- Added duplicate, reorder, rename, delete, and external-open tab actions.
+- Improved local workspace schema to version 2.
+- Clarified browser and background-notification constraints.
+
+
 ## 0.1.0
 
 - Initial Devil Mail Client PWA foundation.
