@@ -1,6 +1,6 @@
 const DEFAULT_INTERVAL = 60000;
 
-function parseStatus(payload) {
+export function parseStatus(payload) {
   const unreadCandidates = [
     payload?.unreadCount,
     payload?.unread,
