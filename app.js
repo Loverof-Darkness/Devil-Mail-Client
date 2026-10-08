@@ -24,7 +24,8 @@ const els = {
   mailFormError: document.querySelector("#mailFormError"),
   settingsDialog: document.querySelector("#settingsDialog"),
   notificationStatus: document.querySelector("#notificationStatus"),
-  toast: document.querySelector("#toast")
+  toast: document.querySelector("#toast"),
+  mailPreset: document.querySelector("#mailPreset")
 };
 
 let toastTimer;
@@ -78,6 +79,7 @@ function setActiveTab(id) {
 
 function openMailDialog() {
   els.mailForm.reset();
+  els.mailPreset.value = "custom";
   els.monitorInterval.value = "60000";
   els.mailFormError.hidden = true;
   els.mailFormError.textContent = "";
@@ -98,7 +100,8 @@ function renderSidebar() {
   els.mailList.replaceChildren();
   els.emptyHint.hidden = state.tabs.length > 0;
 
-  for (const tab of state.tabs) {
+  for (let index = 0; index < state.tabs.length; index += 1) {
+    const tab = state.tabs[index];
     const item = document.createElement("div");
     item.className = `mail-item${tab.id === state.activeTabId ? " active" : ""}`;
 
@@ -120,9 +123,11 @@ function renderSidebar() {
 
     const meta = document.createElement("span");
     meta.className = "mail-item-meta";
-    meta.textContent = tab.monitorUrl
-      ? (tab.monitorError ? "Monitor error" : "Monitoring on")
-      : new URL(tab.url).hostname;
+    if (tab.monitorUrl) {
+      meta.textContent = tab.monitorError ? "Monitor error" : "Monitoring on";
+    } else {
+      try { meta.textContent = new URL(tab.url).hostname; } catch { meta.textContent = "Webmail"; }
+    }
 
     body.append(name, meta);
 
@@ -135,17 +140,50 @@ function renderSidebar() {
     main.title = `${tab.name} — ${tab.url}`;
     item.append(main);
 
-    const menu = document.createElement("button");
-    menu.type = "button";
-    menu.className = "mail-item-menu";
-    menu.textContent = "⋯";
-    menu.title = `Edit ${tab.name}`;
-    menu.setAttribute("aria-label", `Edit ${tab.name}`);
-    menu.addEventListener("click", (event) => {
-      event.stopPropagation();
-      editTab(tab);
+    const menuButton = document.createElement("button");
+    menuButton.type = "button";
+    menuButton.className = "mail-item-menu";
+    menuButton.textContent = "⋯";
+    menuButton.title = `Actions for ${tab.name}`;
+    menuButton.setAttribute("aria-label", `Actions for ${tab.name}`);
+
+    const menu = document.createElement("div");
+    menu.className = "mail-menu";
+    menu.hidden = true;
+
+    const addAction = (label, handler, disabled = false) => {
+      const action = document.createElement("button");
+      action.type = "button";
+      action.className = "mail-menu-action";
+      action.textContent = label;
+      action.disabled = disabled;
+      action.addEventListener("click", (event) => {
+        event.stopPropagation();
+        menu.hidden = true;
+        handler();
+      });
+      menu.append(action);
+    };
+
+    addAction("Rename", () => editTabName(tab));
+    addAction("Open in browser", () => {
+      const popup = window.open(tab.url, "_blank", "noopener,noreferrer");
+      if (!popup) showToast("The browser blocked the new tab.");
     });
-    item.append(menu);
+    addAction("Duplicate", () => duplicateTab(tab));
+    addAction("Move up", () => moveTab(tab.id, -1), index === 0);
+    addAction("Move down", () => moveTab(tab.id, 1), index === state.tabs.length - 1);
+    addAction("Delete", () => closeTab(tab.id));
+
+    menuButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      document.querySelectorAll(".mail-menu").forEach((candidate) => {
+        if (candidate !== menu) candidate.hidden = true;
+      });
+      menu.hidden = !menu.hidden;
+    });
+
+    item.append(menuButton, menu);
     els.mailList.append(item);
   }
 
@@ -155,6 +193,46 @@ function renderSidebar() {
     : `${monitored} monitor${monitored === 1 ? "" : "s"} running`;
 }
 
+function editTabName(tab) {
+  const next = window.prompt("Tab name", tab.name);
+  if (next === null) return;
+  const name = next.trim();
+  if (!name) {
+    showToast("Tab name cannot be empty.");
+    return;
+  }
+  tab.name = name.slice(0, 40);
+  persist();
+  showToast("Tab renamed.");
+}
+
+function duplicateTab(tab) {
+  const copy = structuredClone(tab);
+  copy.id = crypto.randomUUID();
+  copy.name = `${tab.name} copy`.slice(0, 40);
+  copy.unreadCount = 0;
+  copy.latestMessageId = "";
+  copy.latestSubject = "";
+  copy.latestFrom = "";
+  copy.lastCheckedAt = 0;
+  copy.monitorError = "";
+
+  const index = state.tabs.findIndex((candidate) => candidate.id === tab.id);
+  state.tabs.splice(index + 1, 0, copy);
+  state.activeTabId = copy.id;
+  persist();
+  loadActiveFrame();
+  monitorManager.sync(state.tabs);
+  showToast(`${copy.name} added.`);
+}
+
+function moveTab(id, offset) {
+  const index = state.tabs.findIndex((tab) => tab.id === id);
+  const nextIndex = index + offset;
+  if (index < 0 || nextIndex < 0 || nextIndex >= state.tabs.length) return;
+  [state.tabs[index], state.tabs[nextIndex]] = [state.tabs[nextIndex], state.tabs[index]];
+  persist();
+}
 function renderTabs() {
   els.tabStrip.replaceChildren();
 
@@ -399,6 +477,23 @@ function handleMonitorUpdate(updatedTab) {
   persist();
 }
 
+const MAIL_PRESETS = {
+  custom: { name: "", url: "" },
+  gmail: { name: "Gmail", url: "https://mail.google.com/" },
+  outlook: { name: "Outlook", url: "https://outlook.live.com/mail/" },
+  yahoo: { name: "Yahoo Mail", url: "https://mail.yahoo.com/" },
+  zoho: { name: "Zoho Mail", url: "https://mail.zoho.com/" },
+  proton: { name: "Proton Mail", url: "https://mail.proton.me/" },
+  fastmail: { name: "Fastmail", url: "https://app.fastmail.com/" }
+};
+
+function applyMailPreset(value) {
+  const preset = MAIL_PRESETS[value] || MAIL_PRESETS.custom;
+  if (!preset.url) return;
+  els.mailName.value = preset.name;
+  els.mailUrl.value = preset.url;
+}
+
 function handleAddMail(event) {
   event.preventDefault();
   els.mailFormError.hidden = true;
@@ -469,6 +564,7 @@ const monitorManager = new MailMonitorManager({
 });
 
 document.querySelector("#addMailButton").addEventListener("click", openMailDialog);
+els.mailPreset.addEventListener("change", () => applyMailPreset(els.mailPreset.value));
 document.querySelector("#welcomeAddButton").addEventListener("click", openMailDialog);
 document.querySelector("#newTabButton").addEventListener("click", openMailDialog);
 document.querySelector("#closeMailDialog").addEventListener("click", () => closeDialog(els.mailDialog));
@@ -534,6 +630,10 @@ els.importInput?.addEventListener("change", async (event) => {
 
 document.querySelector("#exportButton").addEventListener("click", exportWorkspace);
 document.querySelector("#resetButton").addEventListener("click", resetWorkspace);
+
+document.addEventListener("click", () => {
+  document.querySelectorAll(".mail-menu").forEach((menu) => { menu.hidden = true; });
+});
 
 document.addEventListener("keydown", (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "l") {
