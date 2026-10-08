@@ -4,8 +4,8 @@ Devil Mail Client is a browser-style mail workspace. It keeps each webmail servi
 
 ## What is shipped
 
-- Named mail tabs with add, rename, duplicate, close, and reorder-ready state.
-- Browser-style address bar, back/forward history, reload, and open-in-new-tab fallback.
+- Named mail tabs with add, rename, and close.
+- Browser-style address bar, local back/forward URL history, reload, and open-in-new-tab fallback.
 - Persistent local workspace using versioned `localStorage`.
 - PWA manifest + service worker with desktop notifications while the workspace is running.
 - Per-tab unread badges and polling state.
