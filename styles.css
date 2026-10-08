@@ -124,3 +124,13 @@ code { color: #b8d5ff; }
   .browser-panel { grid-template-rows: 42px 46px 28px 1fr; }
   .welcome-card { padding: 27px 21px; }
 }
+
+.mail-menu { position: absolute; right: 5px; top: 38px; min-width: 154px; padding: 5px; border: 1px solid var(--line-strong); border-radius: 11px; background: rgba(8,17,31,.98); box-shadow: var(--shadow); z-index: 20; }
+.mail-menu[hidden] { display: none; }
+.mail-item { position: relative; }
+.mail-menu-action { display: block; width: 100%; border: 0; background: transparent; color: #b9c9dc; text-align: left; padding: 8px 9px; border-radius: 7px; font-size: 11px; cursor: pointer; }
+.mail-menu-action:hover:not(:disabled) { background: rgba(94,162,255,.1); color: var(--text); }
+.mail-menu-action:disabled { opacity: .3; cursor: not-allowed; }
+.provider-note { margin: 4px 0 11px; padding: 10px; border: 1px solid rgba(94,162,255,.14); border-radius: 10px; background: rgba(94,162,255,.045); }
+.provider-note strong { display: block; font-size: 10px; color: #a9c9f4; }
+.provider-note span { display: block; margin-top: 4px; color: #6f86a1; font-size: 10px; line-height: 1.45; }
