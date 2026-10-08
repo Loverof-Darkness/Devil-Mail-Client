@@ -1,0 +1,13 @@
+{
+  "name": "devil-mail-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check app.js && node --check sw.js && node --check core/url.js && node --check core/storage.js && node --check core/monitor.js && node -e \"JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); console.log('manifest ok')\""
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
