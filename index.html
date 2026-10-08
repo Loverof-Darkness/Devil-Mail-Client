@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Devil Mail Client - browser-style mail workspace">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https:; frame-src https:; frame-ancestors 'none'; worker-src 'self';">
+  <title>Devil Mail Client</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <noscript class="noscript">Devil Mail Client needs JavaScript enabled.</noscript>
+  <main id="app" class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">✉</span>
+        <div>
+          <strong>Devil Mail</strong>
+          <span class="brand-subtitle">mail workspace</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button id="notifyButton" class="icon-button" type="button" title="Enable notifications" aria-label="Enable notifications">🔔</button>
+        <button id="settingsButton" class="icon-button" type="button" title="Workspace settings" aria-label="Workspace settings">⚙</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="sidebar" aria-label="Mail services">
+        <div class="sidebar-head">
+          <span>Mail tabs</span>
+          <button id="addMailButton" class="add-button" type="button">＋ Add mail</button>
+        </div>
+        <div id="mailList" class="mail-list"></div>
+        <div id="emptyHint" class="sidebar-hint">
+          Add your first mail service. You can name it anything you like.
+        </div>
+        <div class="sidebar-footer">
+          <span id="monitorSummary">No monitors running</span>
+          <span id="appVersion">v0.1.0</span>
+        </div>
+      </aside>
+
+      <section class="browser-panel" aria-label="Mail browser">
+        <div class="tab-strip" id="tabStrip"></div>
+
+        <div class="browser-toolbar">
+          <button id="backButton" class="toolbar-button" type="button" title="Back" aria-label="Back">←</button>
+          <button id="forwardButton" class="toolbar-button" type="button" title="Forward" aria-label="Forward">→</button>
+          <button id="reloadButton" class="toolbar-button" type="button" title="Reload" aria-label="Reload">↻</button>
+          <form id="addressForm" class="address-form" autocomplete="off">
+            <span class="address-lock" aria-hidden="true">⌁</span>
+            <input id="addressInput" name="address" type="url" inputmode="url" spellcheck="false" placeholder="https://mail.example.com" aria-label="Mail website URL">
+          </form>
+          <button id="externalButton" class="toolbar-button" type="button" title="Open in browser tab" aria-label="Open in browser tab">↗</button>
+          <button id="newTabButton" class="toolbar-button toolbar-primary" type="button" title="Add mail" aria-label="Add mail">＋</button>
+        </div>
+
+        <div id="browserNotice" class="browser-notice" hidden></div>
+
+        <div id="welcome" class="welcome">
+          <div class="welcome-card">
+            <div class="welcome-logo" aria-hidden="true">✉</div>
+            <p class="eyebrow">One workspace</p>
+            <h1>Your mail, in named tabs.</h1>
+            <p class="welcome-copy">
+              Add Gmail, Outlook, Fastmail, a company webmail portal, or any other HTTPS mail site.
+              Each service gets its own tab and optional unread monitoring.
+            </p>
+            <button id="welcomeAddButton" class="primary-button" type="button">＋ Add mail service</button>
+            <p class="welcome-footnote">Some providers block iframe embedding. Use ↗ to open those sites in a normal browser tab.</p>
+          </div>
+        </div>
+
+        <div id="frameShell" class="frame-shell" hidden>
+          <iframe
+            id="mailFrame"
+            title="Selected mail service"
+            loading="eager"
+            referrerpolicy="no-referrer"
+            sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts"
+          ></iframe>
+          <div id="frameFallback" class="frame-fallback" hidden>
+            <div class="fallback-card">
+              <div class="fallback-icon">↗</div>
+              <h2>This mail site prefers a normal browser tab</h2>
+              <p>The site blocked embedded browsing or requires browser features that are unavailable in a frame.</p>
+              <button id="fallbackExternalButton" class="primary-button" type="button">Open mail service</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="mailDialog" class="modal">
+    <form id="mailForm" method="dialog" class="modal-card">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">New mail tab</p>
+          <h2>Add a mail service</h2>
+        </div>
+        <button id="closeMailDialog" class="icon-button" type="button" aria-label="Close">×</button>
+      </div>
+
+      <label class="field">
+        <span>Tab name</span>
+        <input id="mailName" name="name" required maxlength="40" placeholder="Work Gmail">
+      </label>
+
+      <label class="field">
+        <span>Mail website</span>
+        <input id="mailUrl" name="url" required type="url" inputmode="url" placeholder="https://mail.google.com">
+        <small>Use the real HTTPS webmail address. Login happens on that site.</small>
+      </label>
+
+      <details class="advanced-settings">
+        <summary>Unread monitoring (optional)</summary>
+        <div class="advanced-body">
+          <label class="field">
+            <span>Monitor JSON URL</span>
+            <input id="monitorUrl" name="monitorUrl" type="url" inputmode="url" placeholder="https://your-domain.example/mail/status">
+            <small>The endpoint must allow CORS and return JSON with <code>unreadCount</code> and/or <code>latestMessageId</code>.</small>
+          </label>
+          <label class="field">
+            <span>Check interval</span>
+            <select id="monitorInterval" name="monitorInterval">
+              <option value="30000">30 seconds</option>
+              <option value="60000" selected>1 minute</option>
+              <option value="300000">5 minutes</option>
+              <option value="600000">10 minutes</option>
+            </select>
+          </label>
+        </div>
+      </details>
+
+      <div id="mailFormError" class="form-error" role="alert" hidden></div>
+      <div class="modal-actions">
+        <button id="cancelMail" class="secondary-button" value="cancel" type="button">Cancel</button>
+        <button class="primary-button" value="default" type="submit">Add mail tab</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="settingsDialog" class="modal">
+    <form method="dialog" class="modal-card">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Workspace</p>
+          <h2>Settings</h2>
+        </div>
+        <button id="closeSettingsDialog" class="icon-button" type="button" aria-label="Close">×</button>
+      </div>
+
+      <div class="settings-stack">
+        <div class="setting-row">
+          <div>
+            <strong>Notifications</strong>
+            <small id="notificationStatus">Checking permission…</small>
+          </div>
+          <button id="settingsNotifyButton" class="secondary-button" type="button">Enable</button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Workspace backup</strong>
+            <small>Export your named tabs and monitoring settings, or restore them on another device.</small>
+          </div>
+          <div class="button-row">
+            <button id="exportButton" class="secondary-button" type="button">Export</button>
+            <label class="secondary-button file-button">
+              Import
+              <input id="importInput" type="file" accept="application/json,.json">
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row setting-danger">
+          <div>
+            <strong>Reset workspace</strong>
+            <small>Deletes local tabs and settings from this browser only.</small>
+          </div>
+          <button id="resetButton" class="danger-button" type="button">Reset</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
