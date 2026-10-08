@@ -112,6 +112,20 @@
       </label>
 
       <label class="field">
+        <span>Quick service</span>
+        <select id="mailPreset" name="preset">
+          <option value="custom">Custom webmail</option>
+          <option value="gmail">Gmail</option>
+          <option value="outlook">Outlook / Microsoft 365</option>
+          <option value="yahoo">Yahoo Mail</option>
+          <option value="zoho">Zoho Mail</option>
+          <option value="proton">Proton Mail</option>
+          <option value="fastmail">Fastmail</option>
+        </select>
+        <small>Choose a preset to fill the website and tab name, or keep Custom.</small>
+      </label>
+
+      <label class="field">
         <span>Mail website</span>
         <input id="mailUrl" name="url" required type="url" inputmode="url" placeholder="https://mail.google.com">
         <small>Use the real HTTPS webmail address. Login happens on that site.</small>
@@ -119,6 +133,10 @@
 
       <details class="advanced-settings">
         <summary>Unread monitoring (optional)</summary>
+        <div class="provider-note">
+          <strong>Provider API</strong>
+          <span>For guaranteed provider-aware counts, use the provider integration planned for the next release. The JSON monitor below works today with any CORS-enabled endpoint.</span>
+        </div>
         <div class="advanced-body">
           <label class="field">
             <span>Monitor JSON URL</span>
