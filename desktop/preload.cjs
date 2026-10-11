@@ -17,6 +17,11 @@ contextBridge.exposeInMainWorld("devilBrowser", Object.freeze({
   clearBrowsingData: () => ipcRenderer.invoke("browser:clear-data"),
   openDownload: (id) => ipcRenderer.invoke("browser:open-download", id),
   cancelDownload: (id) => ipcRenderer.invoke("browser:cancel-download", id),
+  showMailMenu: () => ipcRenderer.invoke("browser:show-mail-menu"),
+  showHistoryMenu: () => ipcRenderer.invoke("browser:show-history-menu"),
+  showDownloadsMenu: () => ipcRenderer.invoke("browser:show-downloads-menu"),
+  showTabMenu: (id) => ipcRenderer.invoke("browser:show-tab-menu", id),
+  showBrowserMenu: () => ipcRenderer.invoke("browser:show-browser-menu"),
   onState: (callback) => {
     if (typeof callback !== "function") return () => {};
     const listener = (_event, state) => callback(state);
