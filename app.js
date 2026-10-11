@@ -25,7 +25,8 @@ const els = {
   settingsDialog: document.querySelector("#settingsDialog"),
   notificationStatus: document.querySelector("#notificationStatus"),
   toast: document.querySelector("#toast"),
-  mailPreset: document.querySelector("#mailPreset")
+  mailPreset: document.querySelector("#mailPreset"),
+  importInput: document.querySelector("#importInput")
 };
 
 let toastTimer;
