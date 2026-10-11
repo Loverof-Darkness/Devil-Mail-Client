@@ -30,14 +30,25 @@
       "!tests/**"
     ],
     "win": {
-      "target": ["nsis"]
+      "target": [
+        "nsis"
+      ]
     },
     "mac": {
-      "target": ["dmg"]
+      "target": [
+        "dmg"
+      ]
     },
     "linux": {
       "category": "Network;WebBrowser;",
-      "target": ["AppImage", "deb"]
+      "desktopName": "devil-browser",
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "maintainer": "Loverof-Darkness"
     }
-  }
+  },
+  "author": "Loverof-Darkness",
+  "homepage": "https://github.com/Loverof-Darkness/Devil-Mail-Client"
 }
