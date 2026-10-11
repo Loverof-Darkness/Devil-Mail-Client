@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'none'; object-src 'none'; base-uri 'none'; form-action https://duckduckgo.com">
+  <title>New Tab - Devil Browser</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #edf0f7; background: #10131a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: radial-gradient(ellipse at 50% 10%, #452033 0, #1a1d29 34%, #10131a 72%); }
+    main { width: min(920px, 92vw); padding: 42px 0 58px; }
+    .brand { color: #fa4b6b; font-size: 13px; font-weight: 900; letter-spacing: 3px; }
+    h1 { font-size: clamp(35px, 5vw, 58px); line-height: 1.04; letter-spacing: -2.2px; margin: 19px 0 12px; }
+    h1 span { color: #ff5a78; }
+    .subtitle { color: #99a3b7; font-size: 15px; margin: 0 0 30px; }
+    form { display: flex; gap: 10px; padding: 8px; border: 1px solid #394253; border-radius: 16px; background: #11151deF; box-shadow: 0 18px 70px #0005; }
+    input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 11px 14px; color: #f7f8fb; background: transparent; font: inherit; font-size: 16px; }
+    button { border: 0; border-radius: 11px; padding: 0 20px; background: #f34b6b; color: white; font-weight: 800; cursor: pointer; }
+    h2 { margin: 34px 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #7f8aa0; }
+    .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .app { display: flex; align-items: center; gap: 13px; min-height: 70px; padding: 14px; border: 1px solid #343b4a; border-radius: 13px; color: #eaf0fa; background: #1a1e29d9; text-decoration: none; transition: background .15s, transform .15s; }
+    .app:hover { background: #2a3040; transform: translateY(-1px); }
+    .icon { display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 38px; border-radius: 11px; color: #ffb7c4; background: #462433; font-weight: 900; }
+    .name { display: block; font-weight: 750; }
+    .url { display: block; max-width: 100%; margin-top: 4px; overflow: hidden; color: #8c98ad; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+    .tip { margin-top: 29px; color: #69768d; font-size: 12px; }
+    @media (max-width: 640px) { main { padding: 24px 0; } .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); } h1 { letter-spacing: -1px; } .app { padding: 11px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">DEVIL BROWSER</div>
+    <h1>Your web, <span>your way.</span></h1>
+    <p class="subtitle">One real browser for the web and all your mail accounts.</p>
+    <form action="https://duckduckgo.com/" method="get">
+      <input name="q" type="search" autofocus autocomplete="off" placeholder="Search the web or type an address" aria-label="Search the web">
+      <button type="submit">Search</button>
+    </form>
+    <h2>Mail shortcuts</h2>
+    <div class="apps">
+      <a class="app" href="https://mail.google.com/"><span class="icon">G</span><span><span class="name">Gmail</span><span class="url">mail.google.com</span></span></a>
+      <a class="app" href="https://outlook.live.com/mail/"><span class="icon">O</span><span><span class="name">Outlook</span><span class="url">outlook.live.com</span></span></a>
+      <a class="app" href="https://mail.yahoo.com/"><span class="icon">Y</span><span><span class="name">Yahoo Mail</span><span class="url">mail.yahoo.com</span></span></a>
+      <a class="app" href="https://mail.zoho.com/"><span class="icon">Z</span><span><span class="name">Zoho Mail</span><span class="url">mail.zoho.com</span></span></a>
+      <a class="app" href="https://mail.proton.me/"><span class="icon">P</span><span><span class="name">Proton Mail</span><span class="url">mail.proton.me</span></span></a>
+      <a class="app" href="https://app.fastmail.com/"><span class="icon">F</span><span><span class="name">Fastmail</span><span class="url">app.fastmail.com</span></span></a>
+    </div>
+    <p class="tip">Tabs, bookmarks, history and your sign-in sessions are saved on this device. Some sites may still restrict unsupported browsers.</p>
+  </main>
+</body>
+</html>

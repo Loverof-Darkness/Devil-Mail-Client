@@ -1,4 +1,4 @@
-name: Deploy Devil Mail Client
+name: Publish Devil Browser information page
 
 on:
   push:
@@ -21,38 +21,36 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Check out source
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Verify application
+      - name: Verify project
         run: |
           npm run check
           npm test
 
-      - name: Assemble static site
+      - name: Assemble information page
         run: |
-          mkdir -p _site/core
-          cp index.html styles.css app.js sw.js manifest.webmanifest icon.svg _site/
-          cp core/storage.js core/url.js core/monitor.js _site/core/
+          mkdir -p _site
+          cp index.html icon.svg sw.js _site/
           test -s _site/index.html
-          test -s _site/app.js
-          test -s _site/core/monitor.js
+          test -s _site/sw.js
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      - name: Upload artifact
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-      - name: Deploy to Pages
+      - name: Deploy information page
         id: deployment
         uses: actions/deploy-pages@v4

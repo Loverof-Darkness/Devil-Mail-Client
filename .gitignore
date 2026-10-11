@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+desktop/node_modules/
+
+# Generated installers and app bundles
+dist/
+desktop/dist/
+release-assets/
+
+# Local build outputs
+_site/
+.DS_Store
+Thumbs.db
