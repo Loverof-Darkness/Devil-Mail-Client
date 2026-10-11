@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <title>Devil Browser</title>
+  <link rel="stylesheet" href="./chrome.css">
+  <script type="module" src="./chrome.js"></script>
+</head>
+<body>
+  <header class="browser-chrome">
+    <div class="tab-row">
+      <button id="homeButton" class="brand" type="button" title="New tab" aria-label="New tab">D<span>EVIL</span></button>
+      <div id="tabStrip" class="tab-strip" role="tablist" aria-label="Browser tabs"></div>
+      <button id="newTabButton" class="add-tab" type="button" title="New tab (Ctrl+T)" aria-label="New tab">+</button>
+      <span class="drag-space" aria-hidden="true"></span>
+    </div>
+    <div class="toolbar-row">
+      <button id="backButton" class="tool-button" type="button" title="Back" aria-label="Back">←</button>
+      <button id="forwardButton" class="tool-button" type="button" title="Forward" aria-label="Forward">→</button>
+      <button id="reloadButton" class="tool-button" type="button" title="Reload" aria-label="Reload">↻</button>
+      <button id="homePageButton" class="tool-button" type="button" title="Home / new tab" aria-label="Home">⌂</button>
+      <form id="addressForm" class="address-form">
+        <span id="secureMark" class="secure-mark" aria-hidden="true">◈</span>
+        <input id="addressInput" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search or enter website" placeholder="Search or enter website">
+        <button class="go-button" type="submit" title="Go" aria-label="Go">↵</button>
+      </form>
+      <button id="bookmarkButton" class="tool-button bookmark-button" type="button" title="Bookmark this page" aria-label="Bookmark this page">☆</button>
+      <button id="historyButton" class="tool-button" type="button" title="Recent history" aria-label="Recent history">◷</button>
+      <button id="downloadsButton" class="tool-button" type="button" title="Downloads" aria-label="Downloads">↓</button>
+      <button id="mailButton" class="mail-button" type="button" title="Open a mail service">Mail</button>
+      <button id="menuButton" class="tool-button menu-button" type="button" title="Browser menu" aria-label="Browser menu">⋮</button>
+    </div>
+    <div class="bookmarks-row">
+      <span class="bookmark-label">BOOKMARKS</span>
+      <div id="bookmarksBar" class="bookmarks-bar"></div>
+      <span id="loadingIndicator" class="loading-indicator" hidden>Loading…</span>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  </header>
+</body>
+</html>
