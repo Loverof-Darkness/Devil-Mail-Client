@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Devil Mail Window",
+  "short_name": "Devil Mail",
+  "version": "0.1.0",
+  "description": "Open email websites in a dedicated Firefox window and reuse Firefox sign-in sessions.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "devil-mail-window@loverofdarkness.com",
+      "strict_min_version": "115.0"
+    }
+  },
+  "action": {
+    "default_title": "Open Devil Mail",
+    "default_icon": "icons/devil-mail.svg"
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+  "permissions": ["storage"]
+}

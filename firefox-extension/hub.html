@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Devil Mail — Mail in one window</title>
+  <link rel="stylesheet" href="hub.css">
+  <script type="module" src="hub.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Devil Mail home">
+        <img src="icons/devil-mail.svg" alt="" width="38" height="38">
+        <span><strong>DEVIL MAIL</strong><small>YOUR EMAIL WORKSPACE</small></span>
+      </a>
+      <div class="privacy-chip"><span class="status-dot"></span> Firefox-managed sessions</div>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow">ONE WINDOW. EVERY INBOX.</p>
+      <h1>Your mail,<br><span>without the hassle.</span></h1>
+      <p class="hero-copy">Open your email website in a real Firefox tab. Sign in once, and let Firefox remember your session.</p>
+      <div id="status" class="status-message" role="status" aria-live="polite">Choose a mail service to get started.</div>
+    </section>
+
+    <section aria-labelledby="providers-heading" class="section">
+      <div class="section-heading">
+        <div><p class="eyebrow">QUICK LAUNCH</p><h2 id="providers-heading">Choose your inbox</h2></div>
+        <span class="section-note">Opens in this window</span>
+      </div>
+      <div class="provider-grid">
+        <button class="provider-card" type="button" data-url="https://mail.google.com/" data-label="Gmail">
+          <span class="provider-mark gmail">G</span><span class="provider-name">Gmail</span><span class="provider-detail">Google Mail</span><span class="launch-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="provider-card" type="button" data-url="https://outlook.live.com/mail/" data-label="Outlook">
+          <span class="provider-mark outlook">O</span><span class="provider-name">Outlook</span><span class="provider-detail">Microsoft Mail</span><span class="launch-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="provider-card" type="button" data-url="https://mail.yahoo.com/" data-label="Yahoo Mail">
+          <span class="provider-mark yahoo">Y!</span><span class="provider-name">Yahoo Mail</span><span class="provider-detail">Yahoo Inbox</span><span class="launch-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="provider-card" type="button" data-url="https://mail.zoho.com/" data-label="Zoho Mail">
+          <span class="provider-mark zoho">Z</span><span class="provider-name">Zoho Mail</span><span class="provider-detail">Personal or work</span><span class="launch-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="provider-card" type="button" data-url="https://mail.proton.me/" data-label="Proton Mail">
+          <span class="provider-mark proton">P</span><span class="provider-name">Proton Mail</span><span class="provider-detail">Private email</span><span class="launch-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="provider-card" type="button" data-url="https://app.fastmail.com/" data-label="Fastmail">
+          <span class="provider-mark fastmail">F</span><span class="provider-name">Fastmail</span><span class="provider-detail">Email and calendar</span><span class="launch-arrow" aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </section>
+
+    <section aria-labelledby="custom-heading" class="custom-panel">
+      <div class="custom-icon" aria-hidden="true">+</div>
+      <div class="custom-copy"><h2 id="custom-heading">Another email provider?</h2><p>Open any custom or company webmail website that supports HTTPS.</p></div>
+      <form id="custom-form" class="custom-form">
+        <label class="visually-hidden" for="custom-url">Email website URL</label>
+        <input id="custom-url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="mail.yourcompany.com" maxlength="2048" required>
+        <button type="submit">Open site <span aria-hidden="true">↗</span></button>
+      </form>
+    </section>
+
+    <section aria-labelledby="recent-heading" class="section recent-section">
+      <div class="section-heading">
+        <div><p class="eyebrow">PICK UP WHERE YOU LEFT OFF</p><h2 id="recent-heading">Your saved websites</h2></div>
+        <span class="section-note">Up to 12 sites</span>
+      </div>
+      <div id="recent-sites" class="recent-list">
+        <p class="empty-state">Your recently opened email websites will appear here.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p><span class="footer-lock" aria-hidden="true">◆</span> Passwords and inbox contents are not stored by Devil Mail.</p>
+      <p>Sessions belong to your Firefox profile and can expire when a provider requires it.</p>
+    </footer>
+  </main>
+</body>
+</html>
