@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- Fixed GitHub Pages configuration so the deploy workflow can enable/configure Pages when needed.
+- Added pre-deployment syntax and unit-test gates and publishes only the required static assets.
+- Fixed workspace import input wiring and refreshes the service-worker cache on updates.
+
+
 ## 0.2.0
 
 - Added webmail service presets.

@@ -2,6 +2,12 @@
 
 Devil Mail Client is a browser-style mail workspace. It keeps each webmail service in a named tab, remembers the workspace locally, and can monitor CORS-enabled mail status feeds to raise desktop notifications.
 
+## Live app
+
+**[Open Devil Mail Client](https://loverof-darkness.github.io/Devil-Mail-Client/)**
+
+The site is published with GitHub Pages from the `main` branch using the GitHub Actions workflow in `.github/workflows/pages.yml`.
+
 ## What is shipped
 
 - Named mail tabs with add, rename, duplicate, reorder, and close.
