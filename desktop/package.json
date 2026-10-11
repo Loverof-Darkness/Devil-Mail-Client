@@ -41,7 +41,6 @@
     },
     "linux": {
       "category": "Network;WebBrowser;",
-      "desktopName": "devil-browser",
       "target": [
         "AppImage",
         "deb"
