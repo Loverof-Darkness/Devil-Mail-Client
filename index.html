@@ -2,212 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#07111f">
-  <meta name="description" content="Devil Mail Client - browser-style mail workspace">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; connect-src 'self' https:; frame-src https:; frame-ancestors 'none'; worker-src 'self';">
-  <title>Devil Mail Client</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131a">
+  <meta name="description" content="Devil Browser — a desktop Chromium browser with tabs, bookmarks, downloads and mail shortcuts.">
+  <title>Devil Browser — Desktop Browser</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #10131a; color: #eef1f8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 78% 0%, #462033 0, #1a1d29 33%, #10131a 72%); }
+    .page { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 26px 0; border-bottom: 1px solid #303644; }
+    .brand { color: #ff5373; font-size: 13px; font-weight: 950; letter-spacing: 2.5px; }
+    header a { color: #aeb8ca; text-decoration: none; font-size: 13px; }
+    header a:hover { color: white; }
+    main { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(270px, .8fr); gap: 45px; align-items: center; padding: clamp(45px, 10vh, 100px) 0 72px; }
+    .eyebrow { color: #ff7690; font-weight: 800; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+    h1 { max-width: 700px; margin: 17px 0; font-size: clamp(42px, 7vw, 76px); line-height: .98; letter-spacing: -3.8px; }
+    h1 span { color: #ff5373; }
+    .lead { max-width: 620px; color: #abb4c6; font-size: 17px; line-height: 1.7; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 27px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 45px; padding: 0 18px; border: 1px solid #41495b; border-radius: 12px; color: #f8f9fc; background: #242a37; text-decoration: none; font-weight: 800; font-size: 13px; }
+    .button.primary { background: #f34b6c; border-color: #ff6482; color: white; }
+    .button:hover { filter: brightness(1.1); }
+    .panel { padding: 25px; border: 1px solid #363d4c; border-radius: 20px; background: #191e29e8; box-shadow: 0 25px 90px #0004; }
+    .browser-window { overflow: hidden; border: 1px solid #3b4353; border-radius: 12px; background: #0f1219; }
+    .browser-tabs { display: flex; gap: 6px; padding: 9px; background: #131722; }
+    .browser-tab { min-width: 0; padding: 8px 10px; overflow: hidden; border-radius: 8px 8px 4px 4px; background: #282e3b; color: #e7eaf1; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+    .browser-tab.active { background: #3b2634; color: #ffbdca; }
+    .address { margin: 0 10px 10px; padding: 9px 12px; border: 1px solid #353d4c; border-radius: 8px; color: #9ca8bc; font-size: 10px; }
+    .page-preview { padding: 22px 18px 28px; background: radial-gradient(ellipse at 50% 0, #38202e, #10131a 75%); }
+    .page-preview strong { display: block; font-size: 27px; letter-spacing: -1px; }
+    .page-preview p { color: #919db3; font-size: 11px; line-height: 1.6; }
+    .shortcut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
+    .shortcut { padding: 10px 5px; border: 1px solid #363d4b; border-radius: 9px; text-align: center; color: #e7eaf1; font-size: 10px; background: #202532; }
+    .section { padding: 36px 0 64px; border-top: 1px solid #303644; }
+    .section h2 { margin: 0 0 19px; font-size: 23px; letter-spacing: -.7px; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .feature { min-height: 122px; padding: 19px; border: 1px solid #303746; border-radius: 14px; background: #171c26; }
+    .feature strong { display: block; margin-bottom: 9px; font-size: 13px; }
+    .feature p { margin: 0; color: #8f9ab0; font-size: 12px; line-height: 1.65; }
+    footer { padding: 25px 0 38px; border-top: 1px solid #303644; color: #707c92; font-size: 11px; line-height: 1.7; }
+    footer a { color: #aeb8ca; }
+    @media (max-width: 760px) { main { grid-template-columns: 1fr; gap: 32px; padding-top: 52px; } h1 { letter-spacing: -2.3px; } .features { grid-template-columns: 1fr; } .panel { max-width: 470px; } }
+  </style>
 </head>
 <body>
-  <noscript class="noscript">Devil Mail Client needs JavaScript enabled.</noscript>
-  <main id="app" class="app-shell">
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">✉</span>
-        <div>
-          <strong>Devil Mail</strong>
-          <span class="brand-subtitle">mail workspace</span>
-        </div>
-      </div>
-      <div class="topbar-actions">
-        <button id="notifyButton" class="icon-button" type="button" title="Enable notifications" aria-label="Enable notifications">🔔</button>
-        <button id="settingsButton" class="icon-button" type="button" title="Workspace settings" aria-label="Workspace settings">⚙</button>
-      </div>
+  <div class="page">
+    <header>
+      <div class="brand">DEVIL BROWSER</div>
+      <a href="https://github.com/Loverof-Darkness/Devil-Mail-Client">Source code on GitHub ↗</a>
     </header>
 
-    <section class="workspace">
-      <aside class="sidebar" aria-label="Mail services">
-        <div class="sidebar-head">
-          <span>Mail tabs</span>
-          <button id="addMailButton" class="add-button" type="button">＋ Add mail</button>
+    <main>
+      <section>
+        <div class="eyebrow">Desktop browser · version 0.3.0</div>
+        <h1>A real browser.<br><span>Not an iframe.</span></h1>
+        <p class="lead">The old web workspace could not reliably open mail providers because they block iframe embedding. Devil Browser is being rebuilt as a desktop Chromium-based app, with actual page views, persistent sessions and browser controls.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/Loverof-Darkness/Devil-Mail-Client/actions/workflows/desktop-browser.yml">Get a test build ↗</a>
+          <a class="button" href="https://github.com/Loverof-Darkness/Devil-Mail-Client/releases">Published releases ↗</a>
         </div>
-        <div id="mailList" class="mail-list"></div>
-        <div id="emptyHint" class="sidebar-hint">
-          Add your first mail service. You can name it anything you like.
-        </div>
-        <div class="sidebar-footer">
-          <span id="monitorSummary">No monitors running</span>
-          <span id="appVersion">v0.2.1</span>
-        </div>
-      </aside>
+        <p style="max-width: 610px; margin-top: 16px; color: #7f8ba1; font-size: 12px; line-height: 1.7;">For a test build, open the latest successful Desktop Browser CI run in Actions and download the artifact for your operating system. Linux, Windows and macOS are built separately.</p>
+      </section>
 
-      <section class="browser-panel" aria-label="Mail browser">
-        <div class="tab-strip" id="tabStrip"></div>
-
-        <div class="browser-toolbar">
-          <button id="backButton" class="toolbar-button" type="button" title="Back" aria-label="Back">←</button>
-          <button id="forwardButton" class="toolbar-button" type="button" title="Forward" aria-label="Forward">→</button>
-          <button id="reloadButton" class="toolbar-button" type="button" title="Reload" aria-label="Reload">↻</button>
-          <form id="addressForm" class="address-form" autocomplete="off">
-            <span class="address-lock" aria-hidden="true">⌁</span>
-            <input id="addressInput" name="address" type="url" inputmode="url" spellcheck="false" placeholder="https://mail.example.com" aria-label="Mail website URL">
-          </form>
-          <button id="externalButton" class="toolbar-button" type="button" title="Open in browser tab" aria-label="Open in browser tab">↗</button>
-          <button id="newTabButton" class="toolbar-button toolbar-primary" type="button" title="Add mail" aria-label="Add mail">＋</button>
-        </div>
-
-        <div id="browserNotice" class="browser-notice" hidden></div>
-
-        <div id="welcome" class="welcome">
-          <div class="welcome-card">
-            <div class="welcome-logo" aria-hidden="true">✉</div>
-            <p class="eyebrow">One workspace</p>
-            <h1>Your mail, in named tabs.</h1>
-            <p class="welcome-copy">
-              Add Gmail, Outlook, Fastmail, a company webmail portal, or any other HTTPS mail site.
-              Each service gets its own tab and optional unread monitoring.
-            </p>
-            <button id="welcomeAddButton" class="primary-button" type="button">＋ Add mail service</button>
-            <p class="welcome-footnote">Some providers block iframe embedding. Use ↗ to open those sites in a normal browser tab.</p>
+      <aside class="panel" aria-label="Devil Browser interface preview">
+        <div class="browser-window">
+          <div class="browser-tabs">
+            <div class="browser-tab active">Gmail · Inbox</div>
+            <div class="browser-tab">Documentation</div>
+            <div class="browser-tab">New Tab</div>
           </div>
-        </div>
-
-        <div id="frameShell" class="frame-shell" hidden>
-          <iframe
-            id="mailFrame"
-            title="Selected mail service"
-            loading="eager"
-            referrerpolicy="no-referrer"
-            sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts"
-          ></iframe>
-          <div id="frameFallback" class="frame-fallback" hidden>
-            <div class="fallback-card">
-              <div class="fallback-icon">↗</div>
-              <h2>This mail site prefers a normal browser tab</h2>
-              <p>The site blocked embedded browsing or requires browser features that are unavailable in a frame.</p>
-              <button id="fallbackExternalButton" class="primary-button" type="button">Open mail service</button>
+          <div class="address">◈ &nbsp; https://mail.google.com/</div>
+          <div class="page-preview">
+            <span class="eyebrow">Your web, your way</span>
+            <strong>One window.<br>All your mail.</strong>
+            <p>Independent page tabs, browser sessions, bookmarks and downloads.</p>
+            <div class="shortcut-grid">
+              <div class="shortcut">Gmail</div>
+              <div class="shortcut">Outlook</div>
+              <div class="shortcut">Proton</div>
+              <div class="shortcut">Yahoo</div>
+              <div class="shortcut">Zoho</div>
+              <div class="shortcut">Fastmail</div>
             </div>
           </div>
         </div>
-      </section>
+      </aside>
+    </main>
+
+    <section class="section">
+      <h2>Built for actual browsing</h2>
+      <div class="features">
+        <article class="feature"><strong>Real page tabs</strong><p>Sites load in isolated Chromium-backed views, not inside third-party iframes.</p></article>
+        <article class="feature"><strong>Browser essentials</strong><p>Address/search bar, back and forward, bookmarks, recent history, downloads and persistent site sessions.</p></article>
+        <article class="feature"><strong>Mail-focused extras</strong><p>Quick links for six mail services and best-effort unread badges when a website exposes the count in its page title.</p></article>
+      </div>
     </section>
-  </main>
 
-  <dialog id="mailDialog" class="modal">
-    <form id="mailForm" method="dialog" class="modal-card">
-      <div class="modal-head">
-        <div>
-          <p class="eyebrow">New mail tab</p>
-          <h2>Add a mail service</h2>
-        </div>
-        <button id="closeMailDialog" class="icon-button" type="button" aria-label="Close">×</button>
-      </div>
-
-      <label class="field">
-        <span>Tab name</span>
-        <input id="mailName" name="name" required maxlength="40" placeholder="Work Gmail">
-      </label>
-
-      <label class="field">
-        <span>Quick service</span>
-        <select id="mailPreset" name="preset">
-          <option value="custom">Custom webmail</option>
-          <option value="gmail">Gmail</option>
-          <option value="outlook">Outlook / Microsoft 365</option>
-          <option value="yahoo">Yahoo Mail</option>
-          <option value="zoho">Zoho Mail</option>
-          <option value="proton">Proton Mail</option>
-          <option value="fastmail">Fastmail</option>
-        </select>
-        <small>Choose a preset to fill the website and tab name, or keep Custom.</small>
-      </label>
-
-      <label class="field">
-        <span>Mail website</span>
-        <input id="mailUrl" name="url" required type="url" inputmode="url" placeholder="https://mail.google.com">
-        <small>Use the real HTTPS webmail address. Login happens on that site.</small>
-      </label>
-
-      <details class="advanced-settings">
-        <summary>Unread monitoring (optional)</summary>
-        <div class="provider-note">
-          <strong>Provider API</strong>
-          <span>For guaranteed provider-aware counts, use the provider integration planned for the next release. The JSON monitor below works today with any CORS-enabled endpoint.</span>
-        </div>
-        <div class="advanced-body">
-          <label class="field">
-            <span>Monitor JSON URL</span>
-            <input id="monitorUrl" name="monitorUrl" type="url" inputmode="url" placeholder="https://your-domain.example/mail/status">
-            <small>The endpoint must allow CORS and return JSON with <code>unreadCount</code> and/or <code>latestMessageId</code>.</small>
-          </label>
-          <label class="field">
-            <span>Check interval</span>
-            <select id="monitorInterval" name="monitorInterval">
-              <option value="30000">30 seconds</option>
-              <option value="60000" selected>1 minute</option>
-              <option value="300000">5 minutes</option>
-              <option value="600000">10 minutes</option>
-            </select>
-          </label>
-        </div>
-      </details>
-
-      <div id="mailFormError" class="form-error" role="alert" hidden></div>
-      <div class="modal-actions">
-        <button id="cancelMail" class="secondary-button" value="cancel" type="button">Cancel</button>
-        <button class="primary-button" value="default" type="submit">Add mail tab</button>
-      </div>
-    </form>
-  </dialog>
-
-  <dialog id="settingsDialog" class="modal">
-    <form method="dialog" class="modal-card">
-      <div class="modal-head">
-        <div>
-          <p class="eyebrow">Workspace</p>
-          <h2>Settings</h2>
-        </div>
-        <button id="closeSettingsDialog" class="icon-button" type="button" aria-label="Close">×</button>
-      </div>
-
-      <div class="settings-stack">
-        <div class="setting-row">
-          <div>
-            <strong>Notifications</strong>
-            <small id="notificationStatus">Checking permission…</small>
-          </div>
-          <button id="settingsNotifyButton" class="secondary-button" type="button">Enable</button>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong>Workspace backup</strong>
-            <small>Export your named tabs and monitoring settings, or restore them on another device.</small>
-          </div>
-          <div class="button-row">
-            <button id="exportButton" class="secondary-button" type="button">Export</button>
-            <label class="secondary-button file-button">
-              Import
-              <input id="importInput" type="file" accept="application/json,.json">
-            </label>
-          </div>
-        </div>
-
-        <div class="setting-row setting-danger">
-          <div>
-            <strong>Reset workspace</strong>
-            <small>Deletes local tabs and settings from this browser only.</small>
-          </div>
-          <button id="resetButton" class="danger-button" type="button">Reset</button>
-        </div>
-      </div>
-    </form>
-  </dialog>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="app.js"></script>
+    <footer>
+      Devil Browser is a desktop app, so this information page cannot itself become the browser. Chrome extensions, Google Sync and direct Gmail/Microsoft Graph OAuth monitoring are not implemented yet. Some websites may still reject Electron-based browsers.
+      <br><a href="https://github.com/Loverof-Darkness/Devil-Mail-Client/blob/main/desktop/README.md">Build instructions and current limitations</a>
+    </footer>
+  </div>
 </body>
 </html>
