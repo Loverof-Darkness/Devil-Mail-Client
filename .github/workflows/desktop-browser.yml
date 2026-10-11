@@ -1,0 +1,86 @@
+name: Desktop Browser CI
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "browser-v*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Test and package (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            runner: ubuntu-latest
+            args: --linux AppImage deb --publish never
+          - platform: windows
+            runner: windows-latest
+            args: --win nsis --publish never
+          - platform: macos
+            runner: macos-latest
+            args: --mac dmg --publish never
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install desktop dependencies
+        working-directory: desktop
+        run: npm install --no-audit --no-fund
+
+      - name: Check and test
+        working-directory: desktop
+        run: |
+          npm run check
+          npm test
+
+      - name: Package desktop browser
+        working-directory: desktop
+        run: npm run package -- ${{ matrix.args }}
+
+      - name: Upload platform packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: devil-browser-${{ matrix.platform }}
+          path: desktop/dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Publish tagged desktop release
+    if: startsWith(github.ref, 'refs/tags/browser-v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download platform packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: devil-browser-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Devil Browser ${{ github.ref_name }}
+          generate_release_notes: true
+          files: release-assets/*
