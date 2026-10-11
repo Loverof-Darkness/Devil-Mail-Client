@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/*.test.mjs",
-    "check": "node --check app.js && node --check sw.js && node --check core/url.js && node --check core/storage.js && node --check core/monitor.js && node -e \"JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); console.log('manifest ok')\""
+    "test": "node --test tests/*.test.mjs && npm --prefix desktop test",
+    "check": "node --check app.js && node --check sw.js && node --check core/url.js && node --check core/storage.js && node --check core/monitor.js && node -e \"JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); console.log('manifest ok')\" && node --check desktop/main.js && node --check desktop/browser-core.js && node --check desktop/menus.js && node --check desktop/chrome.js && node --check desktop/preload.cjs && node --check desktop/tests/browser-core.test.mjs",
+    "desktop:start": "npm --prefix desktop start",
+    "desktop:check": "npm --prefix desktop run check",
+    "desktop:package": "npm --prefix desktop run package"
   },
   "engines": {
     "node": ">=22"
