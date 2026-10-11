@@ -1,86 +1,42 @@
-# Devil Mail Client
+# Devil Browser
 
-Devil Mail Client is a browser-style mail workspace. It keeps each webmail service in a named tab, remembers the workspace locally, and can monitor CORS-enabled mail status feeds to raise desktop notifications.
+**Devil Browser is being rebuilt as a real desktop browser.** The old GitHub Pages app was only a webmail dashboard, and mail sites commonly block iframe embedding. That was the wrong architecture for the goal.
 
-## Live app
+- **Desktop app source:** [desktop/](desktop/)
+- **Open the project page:** https://loverof-darkness.github.io/Devil-Mail-Client/
+- **Download CI test builds:** [Desktop Browser Actions](https://github.com/Loverof-Darkness/Devil-Mail-Client/actions/workflows/desktop-browser.yml)
+- **Published installers:** [GitHub Releases](https://github.com/Loverof-Darkness/Devil-Mail-Client/releases)
 
-**[Open Devil Mail Client](https://loverof-darkness.github.io/Devil-Mail-Client/)**
+## Run it locally
 
-The site is published with GitHub Pages from the `main` branch using the GitHub Actions workflow in `.github/workflows/pages.yml`.
+Requires Node.js 22 or newer.
 
-## What is shipped
+    cd desktop
+    npm install
+    npm start
 
-- Named mail tabs with add, rename, duplicate, reorder, and close.
-- Browser-style address bar, local back/forward URL history, reload, and open-in-new-tab fallback.
-- Persistent local workspace using versioned `localStorage`.
-- PWA manifest + service worker with desktop notifications while the workspace is running.
-- Per-tab unread badges and polling state.
-- Optional CORS-enabled JSON monitor endpoint per tab.
-- Import/export of workspace settings.
-- Strict URL validation and safe DOM rendering. No `eval`, no dynamic HTML injection.
-- GitHub Pages deployment workflow.
+Run browser-core tests with:
 
-## Browser/security reality
+    npm test
+    npm run check
 
-A normal web page cannot read another origin's DOM or cookies. Many mail providers also send `Content-Security-Policy: frame-ancestors` or `X-Frame-Options`, which prevents them from being embedded in an iframe. When that happens, Devil Mail Client keeps the tab and lets you open the site in a normal browser tab/window instead. See MDN's framing guidance for the underlying browser security model.
+The desktop workflow builds separate Linux, Windows and macOS packages. Linux builds include AppImage and deb packages; Windows builds an NSIS installer; macOS builds a DMG. CI artifacts are attached to successful Actions runs. Tagged releases use tags beginning with browser-v.
 
-Unread monitoring runs while the app is open. Browser timer throttling varies by OS/browser, so this release does not claim guaranteed closed-app/background mail delivery. For that, use the planned server-side Web Push/provider adapter path below.
+## The browser we're building
 
-For unread monitoring, the app expects a CORS-enabled HTTPS JSON endpoint that returns at least one of:
+The desktop app uses Electron's Chromium-backed WebContentsView for each site instead of putting third-party sites inside iframes. That allows normal browser page behavior, sign-in sessions, navigation, downloads and permission prompts.
 
-```json
-{
-  "unreadCount": 4,
-  "latestMessageId": "abc123",
-  "latestSubject": "New mail",
-  "latestFrom": "sender@example.com"
-}
-```
+Current features include:
+- Separate web tabs, new/close/duplicate and right-click tab actions.
+- Search/address bar, back/forward, reload/stop and a usable new-tab page.
+- Bookmarks, recent history, downloads and persistent site sessions.
+- Direct mail shortcuts for Gmail, Outlook, Yahoo Mail, Zoho, Proton Mail and Fastmail.
+- Native notifications where the page exposes an unread-count prefix in its title; this is best-effort, not a guaranteed provider API.
 
-The monitor adapter intentionally does not collect or proxy mailbox credentials. A future backend/provider connector can implement Gmail, Microsoft Graph, IMAP, or another provider without weakening the browser security model.
+## Current limitations
 
-## Run locally
+This is the first desktop-browser MVP, not an attempt to rebrand Google Chrome. Chrome extensions, Google Sync, cloud profile sync and direct Gmail/Microsoft Graph OAuth inbox monitoring are not implemented. Some sites may still reject Electron-based browsers or require a branded Chrome/Edge build. Read [desktop/README.md](desktop/README.md) for setup and security details.
 
-Serve the repository with any static HTTP server. For example:
+## Security
 
-```bash
-python3 -m http.server 4173
-```
-
-Then open `http://localhost:4173`.
-
-## Deploy
-
-The repository includes `.github/workflows/pages.yml`. Enable GitHub Pages with GitHub Actions as the source, then push to `main`.
-
-## Files
-
-- `index.html` - app shell.
-- `app.js` - UI/state orchestration.
-- `core/storage.js` - versioned persistence and import/export.
-- `core/url.js` - safe URL handling.
-- `core/monitor.js` - polling + notification adapter.
-- `styles.css` - responsive dark UI.
-- `sw.js` - PWA service worker.
-- `_headers` - optional headers file for static hosts such as Cloudflare Pages.
-
-## Roadmap
-
-The architecture is intentionally adapter-based so provider OAuth connectors can be added without replacing the workspace UI. Gmail and Microsoft Graph are the first natural provider integrations for background mail counts.
-
-## What "browser-style" means
-
-Devil Mail Client provides a browser-like workspace and toolbar, but it is still a web application. The application cannot become an unrestricted browser engine: third-party sites control whether they can be framed, and browser same-origin rules prevent the workspace from reading their DOM or cookies. The external-tab action is the supported path for providers that block embedding or require top-level browser behavior.
-
-## Mail notifications
-
-There are two supported monitoring paths:
-
-1. A CORS-enabled HTTPS JSON endpoint controlled by the user or mail service. This is the generic path available in v0.2.0.
-2. A provider API connector can be added later without changing the tab/storage UI. The current provider docs keep credentials out of the repository and out of workspace exports.
-
-Notifications are delivered while the workspace can execute the monitor. A service worker cannot guarantee that an arbitrary web page will wake itself forever in the background, so the app does not promise closed-browser polling in this release.
-
-## Presets
-
-The Add Mail dialog includes ready-to-use presets for Gmail, Outlook/Microsoft 365, Yahoo Mail, Zoho Mail, Proton Mail, and Fastmail. Presets only fill the web address and name; they do not collect provider passwords.
+Remote pages are sandboxed with Node integration disabled and context isolation enabled. Only the local toolbar has a narrow IPC bridge, and each IPC handler checks its sender. The address bar accepts HTTP/HTTPS URLs or search terms; file and javascript URLs are rejected. See [SECURITY.md](SECURITY.md).
