@@ -24,13 +24,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify application
+        run: |
+          npm run check
+          npm test
+
+      - name: Assemble static site
+        run: |
+          mkdir -p _site/core
+          cp index.html styles.css app.js sw.js manifest.webmanifest icon.svg _site/
+          cp core/storage.js core/url.js core/monitor.js _site/core/
+          test -s _site/index.html
+          test -s _site/app.js
+          test -s _site/core/monitor.js
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Deploy to Pages
         id: deployment
