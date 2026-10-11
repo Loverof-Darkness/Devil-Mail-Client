@@ -1,0 +1,43 @@
+{
+  "name": "devil-browser",
+  "productName": "Devil Browser",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "A desktop Chromium browser with first-class mail shortcuts, persistent sessions, bookmarks, history and downloads.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check browser-core.js && node --check chrome.js && node --check preload.cjs && node --check tests/browser-core.test.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "package": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.loverofdarkness.devilbrowser",
+    "productName": "Devil Browser",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!node_modules/.cache/**",
+      "!tests/**"
+    ],
+    "win": {
+      "target": ["nsis"]
+    },
+    "mac": {
+      "target": ["dmg"]
+    },
+    "linux": {
+      "category": "Network;WebBrowser;",
+      "target": ["AppImage", "deb"]
+    }
+  }
+}
