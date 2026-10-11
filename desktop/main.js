@@ -10,6 +10,7 @@ import {
   NEW_TAB_URL, MAIL_SERVICES, isWebUrl, normalizeAddress,
   normalizeStoredUrl, extractUnreadCount, sanitizePersistedState
 } from "./browser-core.js";
+import { registerBrowserMenus } from "./menus.js";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const CHROME_FILE = path.join(ROOT, "chrome.html");
@@ -639,6 +640,20 @@ app.whenReady().then(() => {
   registerPermissions();
   registerDownloads();
   registerIpc();
+  registerBrowserMenus({
+    ipcMain, Menu, dialog, shell, app, browserSession, permissionGrants,
+    getWindow: () => mainWindow,
+    getTabs: () => tabs,
+    getActiveTab: () => getTab(activeTabId),
+    getHistory: () => history,
+    getDownloads: () => downloads,
+    getDownloadItems: () => downloadItems,
+    getTab,
+    assertChromeSender,
+    createTab,
+    closeTab,
+    setActiveTab
+  });
   installApplicationMenu();
   createWindow();
   app.on("activate", () => {
