@@ -1,0 +1,50 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  color: #e9ecf3;
+  background: #10131a;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 128px; margin: 0; overflow: hidden; background: #10131a; }
+button, input { font: inherit; }
+button { color: inherit; cursor: pointer; }
+button:disabled { cursor: default; opacity: .35; }
+.browser-chrome { width: 100%; height: 128px; overflow: hidden; border-bottom: 1px solid #303643; background: #151923; }
+.tab-row { display: flex; align-items: end; gap: 5px; height: 39px; padding: 5px 8px 0; background: #10131a; }
+.brand { flex: 0 0 74px; align-self: center; border: 0; background: transparent; font-weight: 900; color: #ff4c69; letter-spacing: .7px; font-size: 15px; padding: 4px 2px; }
+.brand span { color: #f0f2f7; font-size: 10px; margin-left: 1px; }
+.tab-strip { min-width: 0; flex: 0 1 920px; height: 34px; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: thin; scrollbar-color: #424958 transparent; }
+.browser-tab { flex: 0 1 220px; min-width: 95px; max-width: 220px; height: 33px; border: 1px solid transparent; border-radius: 9px 9px 0 0; padding: 0 7px 0 10px; display: flex; align-items: center; gap: 7px; background: #1a1f2a; text-align: left; }
+.browser-tab.active { background: #242a37; border-color: #303746; border-bottom-color: #242a37; }
+.browser-tab:hover { background: #2a3040; }
+.tab-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tab-icon { color: #97a3bb; font-size: 11px; }
+.unread-badge { min-width: 17px; border-radius: 8px; padding: 1px 4px; text-align: center; font-size: 10px; font-weight: 800; background: #f14462; color: white; }
+.tab-close { width: 20px; height: 20px; border: 0; border-radius: 5px; background: transparent; color: #aeb7c8; padding: 0; font-size: 17px; line-height: 16px; }
+.tab-close:hover { background: #424958; color: white; }
+.add-tab { flex: 0 0 29px; height: 29px; margin-bottom: 3px; border: 0; border-radius: 8px; background: transparent; font-size: 20px; color: #bbc3d3; }
+.add-tab:hover, .tool-button:hover { background: #303746; }
+.drag-space { flex: 1; min-width: 0; height: 30px; }
+.toolbar-row { height: 48px; display: flex; align-items: center; gap: 4px; padding: 5px 10px; background: #151923; }
+.tool-button { flex: 0 0 31px; width: 31px; height: 31px; border: 0; border-radius: 9px; background: transparent; color: #c9d0df; font-size: 20px; }
+.address-form { flex: 1; min-width: 80px; height: 34px; display: flex; align-items: center; gap: 7px; padding: 0 8px 0 11px; border: 1px solid #353d4d; border-radius: 11px; background: #0e1118; }
+.address-form:focus-within { border-color: #ed4b6b; box-shadow: 0 0 0 2px #ed4b6b24; }
+.secure-mark { color: #929db1; font-size: 12px; }
+.secure-mark.secure { color: #69d6a7; }
+#addressInput { width: 100%; min-width: 0; outline: 0; border: 0; color: #f4f6fb; background: transparent; }
+#addressInput::placeholder { color: #758096; }
+.go-button { flex: 0 0 25px; width: 25px; height: 26px; border: 0; border-radius: 7px; background: #2a3040; color: #dce2ef; font-size: 18px; }
+.bookmark-button { color: #e7b95e; }
+.mail-button { min-width: 52px; height: 31px; border: 1px solid #573449; border-radius: 9px; padding: 0 11px; background: #35202c; color: #ffb5c3; font-weight: 700; }
+.mail-button:hover { background: #4b2638; }
+.menu-button { font-size: 22px; }
+.bookmarks-row { height: 34px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-top: 1px solid #292f3c; background: #151923; }
+.bookmark-label { flex: 0 0 auto; color: #748096; font-size: 9px; font-weight: 800; letter-spacing: 1px; }
+.bookmarks-bar { flex: 1; display: flex; gap: 5px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.bookmarks-bar::-webkit-scrollbar { display: none; }
+.bookmark-item { max-width: 170px; flex: 0 0 auto; border: 1px solid transparent; padding: 5px 8px; border-radius: 7px; background: transparent; color: #c4cada; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.bookmark-item:hover { background: #292f3d; border-color: #343c4b; }
+.bookmark-empty { color: #68748a; font-size: 11px; }
+.loading-indicator { color: #f0b65e; font-size: 10px; white-space: nowrap; }
+.toast { position: absolute; right: 10px; top: 88px; max-width: min(520px, 70vw); z-index: 5; padding: 7px 11px; border: 1px solid #485164; border-radius: 8px; background: #252c3a; color: #f1f4fa; box-shadow: 0 5px 18px #0006; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
