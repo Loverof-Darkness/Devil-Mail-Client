@@ -46,9 +46,13 @@ test("saved entries keep only HTTPS origins and strip path, query, and fragment"
 
 test("new origins are moved to the front, de-duplicated, and capped", () => {
   const existing = Array.from({ length: SAVED_ORIGINS_LIMIT }, (_, index) => "https://mail" + index + ".example.com/path");
-  const merged = mergeSavedOrigin(existing, "https://mail5.example.com/another-folder?token=not-saved");
-  assert.equal(merged[0], "https://mail5.example.com");
-  assert.equal(merged.filter((origin) => origin === "https://mail5.example.com").length, 1);
-  assert.equal(merged.length, SAVED_ORIGINS_LIMIT);
-  assert.equal(merged.includes("https://mail11.example.com"), false);
+  const withNewOrigin = mergeSavedOrigin(existing, "https://brandnew.example.com/path?token=not-saved");
+  assert.equal(withNewOrigin[0], "https://brandnew.example.com");
+  assert.equal(withNewOrigin.length, SAVED_ORIGINS_LIMIT);
+  assert.equal(withNewOrigin.includes("https://mail11.example.com"), false);
+
+  const withExistingOrigin = mergeSavedOrigin(withNewOrigin, "https://mail5.example.com/another-folder");
+  assert.equal(withExistingOrigin[0], "https://mail5.example.com");
+  assert.equal(withExistingOrigin.filter((origin) => origin === "https://mail5.example.com").length, 1);
+  assert.equal(withExistingOrigin.length, SAVED_ORIGINS_LIMIT);
 });
